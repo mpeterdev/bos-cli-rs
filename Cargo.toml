@@ -7,11 +7,11 @@ edition = "2021"
 repository = "https://github.com/mpeterdev/bos-cli-rs"
 description = "Command line utility helps to develop widgets for near.social by allowing developers to use standard developer tools like their best code editor and standard tools for source code version control, and then deploy their widgets to SocialDB in one command."
 
-[package.metadata.wix]
-upgrade-guid = "0C6AC05E-AA87-4A7A-91F2-3829A7863825"
-path-guid = "4D85FF8F-E7B4-4129-88F6-D7F20D77B4A8"
-license = false
-eula = false
+# [package.metadata.wix]
+# upgrade-guid = "0C6AC05E-AA87-4A7A-91F2-3829A7863825"
+# path-guid = "4D85FF8F-E7B4-4129-88F6-D7F20D77B4A8"
+# license = false
+# eula = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
