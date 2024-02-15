@@ -4,7 +4,7 @@ version = "0.3.13"
 authors = ["FroVolod <frol_off@meta.ua>", "frol <frolvlad@gmail.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
-repository = "https://github.com/bos-cli-rs/bos-cli-rs"
+repository = "https://github.com/mpeterdev/bos-cli-rs"
 description = "Command line utility helps to develop widgets for near.social by allowing developers to use standard developer tools like their best code editor and standard tools for source code version control, and then deploy their widgets to SocialDB in one command."
 
 [package.metadata.wix]
