@@ -31,11 +31,13 @@ pub struct SocialDbAccountMetadata {
 #[serde(untagged)]
 pub enum SocialDbComponent {
     Code(String),
-    CodeWithMetadata {
+    CodeWithAdditional {
         #[serde(rename = "")]
         code: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         metadata: Option<SocialDbComponentMetadata>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        css: Option<String>,
     },
 }
 
@@ -43,14 +45,21 @@ impl SocialDbComponent {
     pub fn code(&self) -> &str {
         match self {
             Self::Code(code) => code,
-            Self::CodeWithMetadata { code, .. } => code,
+            Self::CodeWithAdditional { code, .. } => code,
         }
     }
 
     pub fn metadata(&self) -> Option<&SocialDbComponentMetadata> {
         match self {
             Self::Code(_) => None,
-            Self::CodeWithMetadata { metadata, .. } => metadata.as_ref(),
+            Self::CodeWithAdditional { metadata, .. } => metadata.as_ref(),
+        }
+    }
+
+    pub fn css(&self) -> Option<&str> {
+        match self {
+            Self::Code(_) => None,
+            Self::CodeWithAdditional { css, .. } => css.as_deref(),
         }
     }
 }

@@ -67,7 +67,7 @@ pub fn get_local_components(
 ) -> color_eyre::eyre::Result<HashMap<String, crate::socialdb_types::SocialDbComponent>> {
     let mut components = HashMap::new();
 
-    for component_filepath in glob("./src/**/*.jsx")?.filter_map(Result::ok) {
+    for component_filepath in glob("./src/**/*.tsx")?.filter_map(Result::ok) {
         let component_name: crate::socialdb_types::ComponentName = component_filepath
             .strip_prefix("src")?
             .with_extension("")
@@ -99,9 +99,18 @@ pub fn get_local_components(
             None
         };
 
+        let css_filepath = component_filepath.with_extension("module.css");
+        let css = std::fs::read_to_string(&css_filepath)
+            .wrap_err_with(|| format!("Failed to read CSS file from {}", css_filepath.display()))
+            .ok();
+
         components.insert(
             component_name,
-            crate::socialdb_types::SocialDbComponent::CodeWithMetadata { code, metadata },
+            crate::socialdb_types::SocialDbComponent::CodeWithAdditional {
+                code,
+                metadata,
+                css,
+            },
         );
     }
     Ok(components)
@@ -206,6 +215,13 @@ pub fn get_updated_components(
             if let Some(old_component) = remote_components.get(component_name) {
                 let has_code_changed = crate::common::diff_code(old_component.code(), new_component.code()).is_err();
                 let has_metadata_changed = old_component.metadata() != new_component.metadata() && new_component.metadata().is_some();
+                let has_css_changed =
+                if let (Some(old_css), Some(new_css)) = (old_component.css(), new_component.css()) {
+                    crate::common::diff_code(old_css, new_css).is_err()
+                } else {
+                    false
+                };
+
                 if !has_code_changed {
                     println!("Code for component <{component_name}> has not changed");
                 }
@@ -217,7 +233,15 @@ pub fn get_updated_components(
                 } else {
                     println!("Metadata for component <{component_name}> has not changed");
                 }
-                has_code_changed || has_metadata_changed
+                if has_css_changed {
+                    println!(
+                        "CSS for component <{component_name}> changed",
+                    );
+                } else {
+                    println!("CSS for component <{component_name}> has not changed");
+                }
+
+                has_code_changed || has_metadata_changed || has_css_changed
             } else {
                 println!("Found new component <{component_name}> to deploy");
                 true

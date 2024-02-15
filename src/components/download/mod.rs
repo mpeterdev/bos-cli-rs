@@ -98,7 +98,7 @@ impl DownloadCmdContext {
                                 component_path.display()
                             )
                         })?)?;
-                        let component_code_path = component_path.with_extension("jsx");
+                        let component_code_path = component_path.with_extension("tsx");
                         std::fs::write(&component_code_path, component.code().as_bytes())
                             .wrap_err_with(|| {
                                 format!(
@@ -120,6 +120,17 @@ impl DownloadCmdContext {
                                         component_metadata_path.display()
                                     )
                                 })?;
+                        }
+                        if let Some(css) = component.css() {
+                            let component_css_path = component_path.with_extension("module.css");
+                            std::fs::write(&component_css_path, css.as_bytes()).wrap_err_with(
+                                || {
+                                    format!(
+                                        "Failed to save component css into {}",
+                                        component_css_path.display()
+                                    )
+                                },
+                            )?;
                         }
                     }
 
